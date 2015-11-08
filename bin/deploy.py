@@ -10,12 +10,16 @@ import time
 
 
 def main(argv):
-    repo = "https://github.com/TSAR-Industries/ButBut.git"
+    repo_url = "https://github.com/TSAR-Industries/ButBut.git"
+    source_dir = get_script_path() + "/source"
+    # jar_dir = source_dir + "/application/target/butbut.jar" # change to this before checkin, if you can read this, reject this PR :p
+    jar_dir = source_dir + "/application/target/application-1.0-SNAPSHOT.jar"
     hash = argv[1]
     print "You want to deploy", hash
 
-    checkout(repo, hash)
-    build()
+    checkout(source_dir, repo_url, hash)
+    build(source_dir)
+    check_new_binary(jar_dir)
     stop_butbut()
     copy_binaries()
     start_butbut()
@@ -23,9 +27,7 @@ def main(argv):
 
 
 # todo redirect git stdout and errout somewhere else and print our own status messages instead
-def checkout(repo, hash):
-    source_dir = get_script_path() + "/source"
-
+def checkout(source_dir, repo, hash):
     print "Deleting old source files in", source_dir
     # if we dont flush here, the printout from git will be printed before
     sys.stdout.flush()
@@ -42,10 +44,17 @@ def checkout(repo, hash):
     print "Code checkedout"
 
 
+def build(source_dir):
+    pom_dir = source_dir + "/pom.xml"
+    print "Building", pom_dir
+    call(["mvn", "-f", pom_dir, "clean", "install"])
 
 
-def build():
-    print "Building"
+def check_new_binary(jar_dir):
+    if not os.path.exists(jar_dir):
+        print "Cant find jar-file:",jar_dir
+        quit()
+    print "jar-file found"
 
 
 def stop_butbut():

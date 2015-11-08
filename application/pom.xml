@@ -67,6 +67,7 @@
 					<createDependencyReducedPom>true</createDependencyReducedPom>
 					<dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml
 					</dependencyReducedPomLocation>
+					<finalName>butbut</finalName>
 					<filters>
 						<filter>
 							<artifact>*:*</artifact>
