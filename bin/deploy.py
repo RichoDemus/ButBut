@@ -65,7 +65,8 @@ def check_new_binary(jar_path):
 
 
 def stop_butbut(latest_deliverables_dir):
-    print(subprocess.check_output(["python3", latest_deliverables_dir + "/stop.py"]))
+    #print(subprocess.check_output(["python3", latest_deliverables_dir + "/stop.py"]))
+    subprocess.call(["python3", latest_deliverables_dir + "/stop.py"])
 
 
 def copy_deliverables(jar_path, script_path, config_file_path, install_dir):
@@ -89,7 +90,8 @@ def create_symlink(install_dir, latest_deliverables_dir):
 
 
 def start_butbut(latest_deliverables_dir):
-    print(subprocess.check_output(["python3", latest_deliverables_dir + "/start.py"]))
+    #print(subprocess.check_output(["python3", latest_deliverables_dir + "/start.py"]))
+    subprocess.call(["python3", latest_deliverables_dir + "/start.py"])
 
 
 def perform_healthcheck_and_rollback_if_failed():
