@@ -13,8 +13,8 @@ def main(argv):
     #repo_url = "https://github.com/TSAR-Industries/ButBut.git"
     repo_url = "https://github.com/RichoDemus/ButBut.git"
     source_dir = get_script_path() + "/source"
-    # jar_path = source_dir + "/application/target/butbut.jar" # change to this before checkin, if you can read this, reject this PR :p
-    jar_path = source_dir + "/application/target/application-1.0-SNAPSHOT.jar"
+    jar_path = source_dir + "/application/target/butbut.jar" # change to this before checkin, if you can read this, reject this PR :p
+    #jar_path = source_dir + "/application/target/application-1.0-SNAPSHOT.jar"
     script_path = source_dir + "/bin"
     hash = argv[1]
     install_dir = get_script_path() + "/" + hash
