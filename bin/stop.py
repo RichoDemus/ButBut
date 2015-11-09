@@ -6,6 +6,10 @@ def main():
 
     pid_path = script_dir + "/PID.txt"
 
+    if not os.path.exists(pid_path):
+        print(pid_path + " doesnt exist..")
+        return
+
     file = open(pid_path, "r")
 
     pid = file.read()

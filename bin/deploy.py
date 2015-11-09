@@ -10,7 +10,8 @@ import distutils.core
 
 
 def main(argv):
-    repo_url = "https://github.com/TSAR-Industries/ButBut.git"
+    #repo_url = "https://github.com/TSAR-Industries/ButBut.git"
+    repo_url = "https://github.com/RichoDemus/ButBut.git"
     source_dir = get_script_path() + "/source"
     # jar_path = source_dir + "/application/target/butbut.jar" # change to this before checkin, if you can read this, reject this PR :p
     jar_path = source_dir + "/application/target/application-1.0-SNAPSHOT.jar"
@@ -25,10 +26,10 @@ def main(argv):
     checkout(source_dir, repo_url, hash)
     build(source_dir)
     check_new_binary(jar_path)
-    stop_butbut()
+    stop_butbut(latest_deliverables_dir)
     copy_deliverables(jar_path, script_path, config_file_path, install_dir)
-    #create_symlink(install_dir, latest_deliverables_dir)
-    start_butbut()
+    create_symlink(install_dir, latest_deliverables_dir)
+    start_butbut(latest_deliverables_dir)
     perform_healthcheck_and_rollback_if_failed()
 
 
@@ -38,9 +39,9 @@ def checkout(source_dir, repo, hash):
     # if we dont flush here, the printout from git will be printed before
     sys.stdout.flush()
     if os.path.exists(source_dir):
-        pass#shutil.rmtree(source_dir)
+        shutil.rmtree(source_dir)
 
-    #call(["git", "clone", repo, source_dir])
+    call(["git", "clone", repo, source_dir])
 
     return_code = call(["git", "--git-dir=" + source_dir + "/.git", "--work-tree=" + source_dir, "checkout", hash])
     if return_code != 0:
@@ -53,7 +54,7 @@ def checkout(source_dir, repo, hash):
 def build(source_dir):
     pom_dir = source_dir + "/pom.xml"
     print("Building", pom_dir)
-    #call(["mvn", "-f", pom_dir, "clean", "install"])
+    call(["mvn", "-f", pom_dir, "clean", "install"])
 
 
 def check_new_binary(jar_path):
@@ -63,8 +64,8 @@ def check_new_binary(jar_path):
     print("jar-file found")
 
 
-def stop_butbut():
-    print("Stopping ButBut")
+def stop_butbut(latest_deliverables_dir):
+    call(["python3", latest_deliverables_dir + "/stop.py"])
 
 
 def copy_deliverables(jar_path, script_path, config_file_path, install_dir):
@@ -82,11 +83,13 @@ def copy_deliverables(jar_path, script_path, config_file_path, install_dir):
 
 
 def create_symlink(install_dir, latest_deliverables_dir):
+    if os.path.exists(latest_deliverables_dir):
+        os.unlink(latest_deliverables_dir)
     os.symlink(install_dir, latest_deliverables_dir)
 
 
-def start_butbut():
-    print("Startinb ButBut")
+def start_butbut(latest_deliverables_dir):
+    call(["python3", latest_deliverables_dir + "/start.py"])
 
 
 def perform_healthcheck_and_rollback_if_failed():
