@@ -65,8 +65,6 @@ def check_new_binary(jar_path):
 
 
 def stop_butbut(latest_deliverables_dir):
-    #print(subprocess.check_output(["python3", latest_deliverables_dir + "/stop.py"]))
-    # subprocess.call(["python3", latest_deliverables_dir + "/stop.py"])
     os.chmod(latest_deliverables_dir + "/butbut.sh", 0o700)
     subprocess.call([latest_deliverables_dir + "/butbut.sh", "stop"])
 
