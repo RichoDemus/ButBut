@@ -8,7 +8,7 @@ def main():
     script_dir = get_script_path()
     pid_path = script_dir + "/PID.txt"
 
-    if not os.path.exists(pid_path):
+    if os.path.exists(pid_path):
         print(pid_path + " already exists..")
         return
 
