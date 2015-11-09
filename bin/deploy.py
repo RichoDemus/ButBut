@@ -79,6 +79,7 @@ def copy_deliverables(jar_path, script_path, config_file_path, install_dir):
 
     print("copying contents of " + script_path + " to " + install_dir)
     distutils.dir_util.copy_tree(script_path, install_dir)
+    os.chmod(install_dir + "/butbut.sh", 0o700)
 
     print("Remaking symlink")
 
