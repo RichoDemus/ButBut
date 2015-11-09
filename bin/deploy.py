@@ -26,8 +26,8 @@ def main(argv):
     checkout(source_dir, repo_url, hash)
     build(source_dir)
     check_new_binary(jar_path)
-    stop_butbut(latest_deliverables_dir)
     copy_deliverables(jar_path, script_path, config_file_path, install_dir)
+    stop_butbut(latest_deliverables_dir)
     create_symlink(install_dir, latest_deliverables_dir)
     start_butbut(latest_deliverables_dir)
     perform_healthcheck_and_rollback_if_failed()
@@ -81,10 +81,9 @@ def copy_deliverables(jar_path, script_path, config_file_path, install_dir):
     distutils.dir_util.copy_tree(script_path, install_dir)
     os.chmod(install_dir + "/butbut.sh", 0o700)
 
-    print("Remaking symlink")
-
 
 def create_symlink(install_dir, latest_deliverables_dir):
+    print("Remaking symlink")
     if os.path.exists(latest_deliverables_dir):
         os.unlink(latest_deliverables_dir)
     os.symlink(install_dir, latest_deliverables_dir)
