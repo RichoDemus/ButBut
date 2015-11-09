@@ -6,22 +6,28 @@ import os
 import shutil
 from subprocess import call
 import time
-
+import distutils.core
 
 
 def main(argv):
     repo_url = "https://github.com/TSAR-Industries/ButBut.git"
     source_dir = get_script_path() + "/source"
-    # jar_dir = source_dir + "/application/target/butbut.jar" # change to this before checkin, if you can read this, reject this PR :p
-    jar_dir = source_dir + "/application/target/application-1.0-SNAPSHOT.jar"
+    # jar_path = source_dir + "/application/target/butbut.jar" # change to this before checkin, if you can read this, reject this PR :p
+    jar_path = source_dir + "/application/target/application-1.0-SNAPSHOT.jar"
+    script_path = source_dir + "/bin"
     hash = argv[1]
+    install_dir = get_script_path() + "/" + hash
+    config_file_path = source_dir + "/config.yaml"
+    latest_deliverables_dir = get_script_path() + "/latest"
+
     print("You want to deploy", hash)
 
     checkout(source_dir, repo_url, hash)
     build(source_dir)
-    check_new_binary(jar_dir)
+    check_new_binary(jar_path)
     stop_butbut()
-    copy_binaries()
+    copy_deliverables(jar_path, script_path, config_file_path, install_dir)
+    #create_symlink(install_dir, latest_deliverables_dir)
     start_butbut()
     perform_healthcheck_and_rollback_if_failed()
 
@@ -32,9 +38,9 @@ def checkout(source_dir, repo, hash):
     # if we dont flush here, the printout from git will be printed before
     sys.stdout.flush()
     if os.path.exists(source_dir):
-        shutil.rmtree(source_dir)
+        pass#shutil.rmtree(source_dir)
 
-    call(["git", "clone", repo, source_dir])
+    #call(["git", "clone", repo, source_dir])
 
     return_code = call(["git", "--git-dir=" + source_dir + "/.git", "--work-tree=" + source_dir, "checkout", hash])
     if return_code != 0:
@@ -47,12 +53,12 @@ def checkout(source_dir, repo, hash):
 def build(source_dir):
     pom_dir = source_dir + "/pom.xml"
     print("Building", pom_dir)
-    call(["mvn", "-f", pom_dir, "clean", "install"])
+    #call(["mvn", "-f", pom_dir, "clean", "install"])
 
 
-def check_new_binary(jar_dir):
-    if not os.path.exists(jar_dir):
-        print("Cant find jar-file:",jar_dir)
+def check_new_binary(jar_path):
+    if not os.path.exists(jar_path):
+        print("Cant find jar-file:",jar_path)
         quit()
     print("jar-file found")
 
@@ -61,9 +67,22 @@ def stop_butbut():
     print("Stopping ButBut")
 
 
-def copy_binaries():
-    print("Copying new binaries")
+def copy_deliverables(jar_path, script_path, config_file_path, install_dir):
+    print("Copying new binaries to " + install_dir)
+    if not os.path.exists(install_dir):
+        os.mkdir(install_dir)
+
+    shutil.copy(jar_path, install_dir)
+    shutil.copy(config_file_path, install_dir)
+
+    print("copying contents of " + script_path + " to " + install_dir)
+    distutils.dir_util.copy_tree(script_path, install_dir)
+
     print("Remaking symlink")
+
+
+def create_symlink(install_dir, latest_deliverables_dir):
+    os.symlink(install_dir, latest_deliverables_dir)
 
 
 def start_butbut():
