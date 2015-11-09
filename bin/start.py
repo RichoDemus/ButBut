@@ -13,7 +13,7 @@ def main():
         return
 
     print("Starting ButBut...")
-    proc = subprocess.Popen(["java", "-jar", script_dir + "/application-1.0-SNAPSHOT.jar", "server", script_dir + "/config.yaml"])
+    proc = subprocess.Popen(["nohup", "java", "-jar", script_dir + "/application-1.0-SNAPSHOT.jar", "server", script_dir + "/config.yaml"])
     time.sleep(3)
     pid = proc.pid
     print("The PID is " + str(pid))
