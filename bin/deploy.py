@@ -4,7 +4,7 @@
 import sys
 import os
 import shutil
-from subprocess import call
+import subprocess
 import time
 import distutils.core
 
@@ -41,9 +41,9 @@ def checkout(source_dir, repo, hash):
     if os.path.exists(source_dir):
         shutil.rmtree(source_dir)
 
-    call(["git", "clone", repo, source_dir])
+    subprocess.call(["git", "clone", repo, source_dir])
 
-    return_code = call(["git", "--git-dir=" + source_dir + "/.git", "--work-tree=" + source_dir, "checkout", hash])
+    return_code = subprocess.call(["git", "--git-dir=" + source_dir + "/.git", "--work-tree=" + source_dir, "checkout", hash])
     if return_code != 0:
         print("Checkout failed:", return_code)
         quit()
@@ -54,7 +54,7 @@ def checkout(source_dir, repo, hash):
 def build(source_dir):
     pom_dir = source_dir + "/pom.xml"
     print("Building", pom_dir)
-    call(["mvn", "-f", pom_dir, "clean", "install"])
+    subprocess.call(["mvn", "-f", pom_dir, "clean", "install"])
 
 
 def check_new_binary(jar_path):
@@ -65,7 +65,7 @@ def check_new_binary(jar_path):
 
 
 def stop_butbut(latest_deliverables_dir):
-    call(["python3", latest_deliverables_dir + "/stop.py"])
+    print(subprocess.check_output(["python3", latest_deliverables_dir + "/stop.py"]))
 
 
 def copy_deliverables(jar_path, script_path, config_file_path, install_dir):
@@ -89,7 +89,7 @@ def create_symlink(install_dir, latest_deliverables_dir):
 
 
 def start_butbut(latest_deliverables_dir):
-    call(["python3", latest_deliverables_dir + "/start.py"])
+    print(subprocess.check_output(["python3", latest_deliverables_dir + "/start.py"]))
 
 
 def perform_healthcheck_and_rollback_if_failed():

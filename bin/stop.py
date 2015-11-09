@@ -15,6 +15,7 @@ def main():
     pid = file.read()
 
     print("pid is: " + pid)
+    print("Stopping ButBut...")
     os.system("kill " + pid)
     os.remove(pid_path)
 
