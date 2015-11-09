@@ -23,14 +23,14 @@ def main(argv):
 
     print("You want to deploy", hash)
 
-    #checkout(source_dir, repo_url, hash)
-    #build(source_dir)
-    #check_new_binary(jar_path)
+    checkout(source_dir, repo_url, hash)
+    build(source_dir)
+    check_new_binary(jar_path)
     stop_butbut(latest_deliverables_dir)
-    #copy_deliverables(jar_path, script_path, config_file_path, install_dir)
-    #create_symlink(install_dir, latest_deliverables_dir)
+    copy_deliverables(jar_path, script_path, config_file_path, install_dir)
+    create_symlink(install_dir, latest_deliverables_dir)
     start_butbut(latest_deliverables_dir)
-    #perform_healthcheck_and_rollback_if_failed()
+    perform_healthcheck_and_rollback_if_failed()
 
 
 # todo redirect git stdout and errout somewhere else and print our own status messages instead
