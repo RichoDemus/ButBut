@@ -1,3 +1,16 @@
+# Continuous Deployment script for ButBut
+# This script will:
+# 1. checkout the code
+# 2. build
+# 3. put the files needed to run in a directory named after the commit hash
+# 4. stop the old ButBut instance
+# 5. update a symlink called "latest" to point to the new directory
+# 6. start ButBut
+#
+# This script is intended to be run from a CI server like this: ssh user@host path/deploy.sh commit-hash
+#
+# todo: perform a healthcheck of the new instance and rollback if it failed
+
 # richo dont commit this
 # scp bin/* pi@raspberrypi:applications/butbut/ && ssh pi@raspberrypi /usr/bin/python /home/pi/applications/butbut/deploy.py cool-hash
 
@@ -23,6 +36,7 @@ def main(argv):
 
     print("You want to deploy", hash)
 
+    remove_old_sources(source_dir)
     checkout(source_dir, repo_url, hash)
     build(source_dir)
     check_new_binary(jar_path)
@@ -33,14 +47,16 @@ def main(argv):
     perform_healthcheck_and_rollback_if_failed()
 
 
-# todo redirect git stdout and errout somewhere else and print our own status messages instead
-def checkout(source_dir, repo, hash):
+def remove_old_sources(source_dir):
     print("Deleting old source files in", source_dir)
     # if we dont flush here, the printout from git will be printed before
     sys.stdout.flush()
     if os.path.exists(source_dir):
         shutil.rmtree(source_dir)
 
+
+# todo redirect git stdout and errout somewhere else and print our own status messages instead
+def checkout(source_dir, repo, hash):
     subprocess.call(["git", "clone", repo, source_dir])
 
     return_code = subprocess.call(["git", "--git-dir=" + source_dir + "/.git", "--work-tree=" + source_dir, "checkout", hash])
@@ -89,14 +105,12 @@ def create_symlink(install_dir, latest_deliverables_dir):
 
 
 def start_butbut(latest_deliverables_dir):
-    #print(subprocess.check_output(["python3", latest_deliverables_dir + "/start.py"]))
-    # subprocess.call(["python3", latest_deliverables_dir + "/start.py"], stdin=None, stdout=None, stderr=None)
     subprocess.call([latest_deliverables_dir + "/butbut.sh", "start"])
 
 
 def perform_healthcheck_and_rollback_if_failed():
-    print("Performing healthcheck")
-    print("if failed, rollback")
+    print("Should maybe check if ButBut is running ok?")
+
 
 def get_script_path():
     return os.path.dirname(os.path.realpath(sys.argv[0]))
