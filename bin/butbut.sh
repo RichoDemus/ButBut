@@ -1,13 +1,6 @@
 #! /bin/sh
-#
-# chkconfig: 2345 90 10
-# description:  solr-fs-indexer daemon
 
-# . /etc/init.d/functions
-
-# You will probably want to change only two following lines.
 BASEDIR="/home/pi/applications/butbut/latest/"
-USER="pi"
 
 PROG="ButBut"
 CMD="java -jar ${BASEDIR}/butbut.jar server ${BASEDIR}/config.yaml"
@@ -15,7 +8,7 @@ PIDFILE="${BASEDIR}/butbut.pid"
 RETVAL=0
 
 start () {
-    echo -n $"Starting ${PROG}"
+    echo "Starting ${PROG}"
     if ( [ -f ${PIDFILE} ] )
     then
         echo "${PROG} is already running."
@@ -23,13 +16,13 @@ start () {
         RETVAL=1
         return
     fi
-    touch ${PIDFILE} ; chown ${USER} ${PIDFILE}
+    touch ${PIDFILE}
     java -jar ${BASEDIR}/butbut.jar server ${BASEDIR}/config.yaml >/dev/null 2>/dev/null &
     echo $! > ${PIDFILE}
 }
 
 stop () {
-    echo $"Stopping ${PROG}"
+    echo "Stopping ${PROG}"
     if ( [ ! -f ${PIDFILE} ] )
     then
         echo "${PROG} is not running."
