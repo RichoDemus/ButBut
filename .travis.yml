@@ -3,7 +3,7 @@ jdk:
   - oraclejdk8
 
 before_deploy:
-  - openssl aes-256-cbc -K $encrypted_83630750896a_key -iv $encrypted_83630750896a_iv -in deploy/travis-key.enc -out deploy/travis-key -d
+  openssl aes-256-cbc -K $encrypted_83630750896a_key -iv $encrypted_83630750896a_iv -in deploy/travis-key.enc -out deploy/travis-key -d
 
 deploy:
   provider: script
