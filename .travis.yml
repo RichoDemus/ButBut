@@ -2,5 +2,10 @@ language: java
 jdk:
   - oraclejdk8
 
-openssl aes-256-cbc -K $encrypted_83630750896a_key -iv $encrypted_83630750896a_iv -in travis-key.enc -out travis-key -d
+before_deploy:
+  - openssl aes-256-cbc -K $encrypted_83630750896a_key -iv $encrypted_83630750896a_iv -in deploy/travis-key.enc -out deploy/travis-key -d
+
+deploy:
+  provider: script
+  script: deploy/deploy.sh
 
