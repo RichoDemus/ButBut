@@ -4,9 +4,13 @@ jdk:
 
 before_deploy:
   openssl aes-256-cbc -K $encrypted_83630750896a_key -iv $encrypted_83630750896a_iv -in deploy/travis-key.enc -out deploy/travis-key -d
+  chmod u+x deploy/deploy.sh
 
 deploy:
   provider: script
   script: deploy/deploy.sh
   on:
     branch: add_ssh_key_to_travis
+
+after_deploy:
+  rm deploy/travis-key
