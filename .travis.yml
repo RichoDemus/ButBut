@@ -9,9 +9,9 @@ before_deploy:
 deploy:
   skip_cleanup: true
   provider: script
-  script: deploy/deploy.sh
+  script: deploy/remote_deploy.sh
   on:
-    branch: add_ssh_key_to_travis
+    branch: create_deploy_scripts
 
 after_deploy:
   rm deploy/travis-key

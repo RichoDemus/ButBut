@@ -1,6 +1,11 @@
 #! /bin/sh
 
-BASEDIR="/home/pi/applications/butbut/latest/"
+#
+# This is the start/stop-script for butbut
+# it assumes that butbut.jar and config.yaml lies in BASEDIR
+#
+
+BASEDIR="/home/butbut/latest/"
 
 PROG="ButBut"
 CMD="java -jar ${BASEDIR}/butbut.jar server ${BASEDIR}/config.yaml"
