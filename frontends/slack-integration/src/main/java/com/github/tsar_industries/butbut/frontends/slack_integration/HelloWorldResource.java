@@ -26,6 +26,6 @@ public class HelloWorldResource
 		logger.info("Someone's saying hello");
 		return service.getImage("majsfisk")
 				.map(i -> "y hello thar, I founds image")
-				.orElseGet(() -> "y hello thar, no image found :(");
+				.orElseGet(() -> "y hello thar, no image found. If you can read this, continuous deployment works!");
 	}
 }
